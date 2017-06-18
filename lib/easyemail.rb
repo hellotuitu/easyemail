@@ -49,6 +49,53 @@ class Easyemail
     else
       raise "check smtp_settings, from, to!"
     end
+  end
 
+  def smtp_settings_for_163 user_name, user_password
+    ActionMailer::Base.smtp_settings = {
+      address: "smtp.163.com",
+      port: 25,
+      authentication: "login",
+      user_name: user_name,
+      password: user_password,
+      enable_starttls_auto: true
+    }
+    @config = true
+  end
+
+  def smtp_settings_for_hhu user_name, user_password
+    ActionMailer::Base.smtp_settings = {
+      address: "mail.hhu.edu.cn",
+      port: 25,
+      authentication: "login",
+      user_name: user_name,
+      password: user_password,
+      enable_starttls_auto: false
+    }
+    @config = true
+  end
+
+  def smtp_settings_for_qq user_name, user_password
+    ActionMailer::Base.smtp_settings = {
+      address: "smtp.qq.com",
+      port: 25,
+      authentication: "login",
+      user_name: user_name,
+      password: user_password,
+      enable_starttls_auto: false
+    }
+    @config = true
+  end
+
+  def smtp_settings_for_gmail user_name, user_password
+    ActionMailer::Base.smtp_settings = {
+      address: "smtp.gmail.com",
+      port: 587,
+      authentication: "plain",
+      user_name: user_name,
+      password: user_password,
+      enable_starttls_auto: true
+    }
+    @config = true
   end
 end
