@@ -38,8 +38,8 @@ class Easyemail
         @content = content
         @title = title
         mail(
-          to: to
-          from: from
+          to: to,
+          from: from,
           subject: subject
         ) do | format |
           format.html
