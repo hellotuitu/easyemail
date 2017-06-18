@@ -4,6 +4,20 @@ class Easyemail
   require 'active_support'
   require 'action_mailer'
 
+  class Mailer < ActionMailer::Base
+    def send_email from, to, subject, title, content
+      @content = content
+      @title = title
+      mail(
+        to: to,
+        from: from,
+        subject: subject
+      ) do | format |
+        format.html
+      end
+    end
+  end
+  
   def initialize
     ActionMailer::Base.raise_delivery_errors = true
     ActionMailer::Base.delivery_method = :smtp
@@ -33,19 +47,6 @@ class Easyemail
     @subject = subject
     @title = title
     @content = content
-    class Mailer < ActionMailer::Base
-      def send_email from, to, subject, title, content
-        @content = content
-        @title = title
-        mail(
-          to: to,
-          from: from,
-          subject: subject
-        ) do | format |
-          format.html
-        end
-      end
-    end
 
     Mailer.send_email(@from, @to, @subject, @title, @content)
   end
