@@ -1,8 +1,8 @@
 require "easyemail/version"
 
-module Easyemail
+class Easyemail
   # Your code goes here...
-  def hello
+  def self.hello
     p "hi"
   end
 end
