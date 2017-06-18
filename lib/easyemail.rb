@@ -4,7 +4,7 @@ class Easyemail
   require 'active_support'
   require 'action_mailer'
   require "yaml"
-  
+
   ActionMailer::Base.raise_delivery_errors = true
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.delivery_method = :smtp
@@ -44,6 +44,7 @@ class Easyemail
         password: smtp['user_password'],
         enable_starttls_auto: smtp["ttl"]
       }
+      @from = smtp["user_name"]
       @config = true
     rescue
       raise "wrong parameters for smtp settings."
@@ -61,10 +62,10 @@ class Easyemail
     if @config && @to
       if @to.respond_to? :each
         @to.each do | e |
-          Mailer.send_email(ActionMailer::Base.smtp_settings["user_name"], e, subject, title, content).deliver
+          Mailer.send_email(@from, e, subject, title, content).deliver
         end
       else
-        Mailer.send_email(ActionMailer::Base.smtp_settings["user_name"], @to, subject, title, content).deliver
+        Mailer.send_email(@from, @to, subject, title, content).deliver
       end
     else
       raise "check smtp_settings and receiver!"
@@ -72,7 +73,7 @@ class Easyemail
   end
 
   def smtp_settings_for_163 user_name, user_password
-    ActionMailer::Base.smtp_settings = {
+    smtp = {
       address: "smtp.163.com",
       port: 25,
       authentication: "login",
@@ -80,11 +81,11 @@ class Easyemail
       password: user_password,
       enable_starttls_auto: true
     }
-    @config = true
+    self.smtp_settings smtp
   end
 
   def smtp_settings_for_hhu user_name, user_password
-    ActionMailer::Base.smtp_settings = {
+    smtp = {
       address: "mail.hhu.edu.cn",
       port: 25,
       authentication: "login",
@@ -92,11 +93,11 @@ class Easyemail
       password: user_password,
       enable_starttls_auto: false
     }
-    @config = true
+    self.smtp_settings smtp
   end
 
   def smtp_settings_for_qq user_name, user_password
-    ActionMailer::Base.smtp_settings = {
+    smtp = {
       address: "smtp.qq.com",
       port: 25,
       authentication: "login",
@@ -104,11 +105,11 @@ class Easyemail
       password: user_password,
       enable_starttls_auto: false
     }
-    @config = true
+    self.smtp_settings smtp
   end
 
   def smtp_settings_for_gmail user_name, user_password
-    ActionMailer::Base.smtp_settings = {
+    smtp = {
       address: "smtp.gmail.com",
       port: 587,
       authentication: "plain",
@@ -116,6 +117,6 @@ class Easyemail
       password: user_password,
       enable_starttls_auto: true
     }
-    @config = true
+    self.smtp_settings smtp
   end
 end
