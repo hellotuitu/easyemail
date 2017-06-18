@@ -1,47 +1,26 @@
 require "easyemail/version"
-require 'active_support'
-require 'action_mailer'
-
-ActionMailer::Base.raise_delivery_errors = true
-ActionMailer::Base.perform_deliveries = true
-ActionMailer::Base.delivery_method = :smtp
-ActionMailer::Base.view_paths = File.dirname(__FILE__)
-
-smtp = {
-  "user_name" => "tuitusss@hhu.edu.cn",
-  "user_password" => "123456789shark",
-  "smtp" => "mail.hhu.edu.cn"
-}
-ActionMailer::Base.smtp_settings = {
-  address: smtp['smtp'],
-  port: 25,
-  authentication: :login,
-  user_name: smtp['user_name'],
-  password: smtp['user_password'],
-  enable_starttls_auto: false
-}
-
-class MyMailer < ActionMailer::Base
-  def send_email from, to, subject, title, content
-    p "dsfsdfssaaaaaaaaaaaaaaaa"
-    @content = content
-    @title = title
-    mail(
-      to: to,
-      from: from,
-      subject: subject
-    ) do | format |
-      format.html
-    end
-
-    p "hellosss"
-  end
-end
 
 class Easyemail
+  require 'active_support'
+  require 'action_mailer'
 
-  def initialize
+  ActionMailer::Base.raise_delivery_errors = true
+  ActionMailer::Base.perform_deliveries = true
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.view_paths = File.dirname(__FILE__)
 
+  class Mailer < ActionMailer::Base
+    def send_email from, to, subject, title, content
+      @content = content
+      @title = title
+      mail(
+        to: to,
+        from: from,
+        subject: subject
+      ) do | format |
+        format.html
+      end
+    end
   end
 
   def smtp_settings smtp
@@ -64,14 +43,6 @@ class Easyemail
   end
 
   def email subject, title, content
-    @subject = subject
-    @title = title
-    @content = content
-
-    MyMailer.send_email(@from, @to, @subject, @title, @content)
-    p "dsfsdfsd"
-  end
-  def self.hello
-    p "hi"
+    Mailer.send_email(@from, @to, subject, title, content).deliver
   end
 end
