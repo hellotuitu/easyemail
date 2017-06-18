@@ -53,7 +53,7 @@ class Easyemail
     @title = title
     @content = content
 
-    Mailer.send_email(@from, @to, @subject, @title, @content)
+    MyMailer.send_email(@from, @to, @subject, @title, @content)
     p "dsfsdfsd"
   end
   def self.hello
