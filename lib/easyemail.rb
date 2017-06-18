@@ -1,4 +1,23 @@
 require "easyemail/version"
+require 'active_support'
+require 'action_mailer'
+
+class Mailer < ActionMailer::Base
+  def send_email from, to, subject, title, content
+    p "dsfsdfssaaaaaaaaaaaaaaaa"
+    @content = content
+    @title = title
+    mail(
+      to: to,
+      from: from,
+      subject: subject
+    ) do | format |
+      format.html
+    end
+
+    p "hellosss"
+  end
+end
 
 class Easyemail
   require 'active_support'
@@ -8,22 +27,6 @@ class Easyemail
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.view_paths = File.dirname(__FILE__)
 
-  class Mailer < ActionMailer::Base
-    def send_email from, to, subject, title, content
-      p "dsfsdfssaaaaaaaaaaaaaaaa"
-      @content = content
-      @title = title
-      mail(
-        to: to,
-        from: from,
-        subject: subject
-      ) do | format |
-        format.html
-      end
-
-      p "hellosss"
-    end
-  end
 
   def initialize
 
