@@ -32,6 +32,7 @@ class Easyemail
       password: smtp['user_password'],
       enable_starttls_auto: smtp["ttl"]
     }
+    @config = true
   end
 
   def from= from
@@ -43,6 +44,11 @@ class Easyemail
   end
 
   def email subject, title, content
-    Mailer.send_email(@from, @to, subject, title, content).deliver
+    if @config && @from && @to
+      Mailer.send_email(@from, @to, subject, title, content).deliver
+    else
+      raise "check smtp_settings, from, to!"
+    end
+
   end
 end
