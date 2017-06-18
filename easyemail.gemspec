@@ -6,12 +6,12 @@ require 'easyemail/version'
 Gem::Specification.new do |spec|
   spec.name          = "easyemail"
   spec.version       = Easyemail::VERSION
-  spec.authors       = ["tuitu"]
+  spec.authors       = ["TUITU"]
   spec.email         = ["1965972530@qq.com"]
 
   spec.summary       = %q{"easyemail"}
   spec.description   = %q{"send email in a simple way"}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/hellotuitu/easyemail."
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
