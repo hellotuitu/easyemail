@@ -37,14 +37,14 @@ class Easyemail
   def smtp_settings smtp
     # common settings for smtp, all provided by user.
     begin
-      ActionMailer::Base.smtp_settings = {
-        address: smtp['adress'],
-        port: smtp["port"],
-        authentication: smtp["authentication"],
-        user_name: smtp['user_name'],
-        password: smtp['password'],
-        enable_starttls_auto: smtp["enable_starttls_auto"]
-      }
+      ActionMailer::Base.smtp_settings = smtp #{
+      #   address: smtp['adress'],
+      #   port: smtp["port"],
+      #   authentication: smtp["authentication"],
+      #   user_name: smtp['user_name'],
+      #   password: smtp['password'],
+      #   enable_starttls_auto: smtp["enable_starttls_auto"]
+      # }
       @from = smtp["user_name"]
       @config = true
     rescue
