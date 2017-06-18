@@ -1,41 +1,84 @@
 # Easyemail
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/easyemail`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Easyemail是一个为简化邮件发送流程而发布的gem.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+下载位于项目根目录下的gem安装包`easyemail-0.1.0.gem`
 
-```ruby
-gem 'easyemail'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install easyemail
+执行命令`gem install easyemail-0.1.0.gem`
 
 ## Usage
 
-TODO: Write usage instructions here
+### 第一步:设置smtp
 
-## Development
+该gem为三个知名的邮件服务商`163.com qq.com gmail.com`和我学校(HHU)的邮箱服务做了预先的设置,如果你用来发送邮件的账号来自于以上的邮件服务商,设置smtp的方法如下:
+```ruby
+# 以163邮箱为例
+# 确保该账号开通了smtp服务
+# username 和 password 是你的邮箱账号(账号包括完整后缀)和密码
+  mailer = Easyemail.new
+  mailer.smtp_settings_for_163  user_name, password
+# 同样的方法还有:
+#   smtp_settings_for_hhu
+#   smtp_settings_for_qq
+#   smtp_settings_for_gmail
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+如果你使用的不是以上任何一种,设置方法如下:
+```ruby
+# 确保该账号开通了smtp服务
+# username 和 password 是你的邮箱账号(账号包括完整后缀)和密码
+  mailer = Easyemail.new
+  smtp = {
+    "address" => "**",
+    "port" => **,
+    "authentication" => "**",
+    "user_name" => "**",
+    "password" => "**",
+    "enable_starttls_auto" => **
+  }
+  mailer.smtp_settings smtp
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+另外,还可以从yaml配置文件中导入smtp信息,同样的,如果来自以上四个邮件服务商,配置文件可以这样写
+```
+provider: ** # (只能从163, qq, gmail, hhu中任选一个)
+user_name: **
+password: **
+```
+否则配置文件需这样写:
+```
+address: **
+port: **
+authentication: **
+user_name: **
+password: **
+enable_starttls_auto: **
+```
 
-## Contributing
+调用代码如下:
+```ruby
+  mailer = Easyemail.new
+  mailer.load_smtp_settings_from_yaml file_path
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/easyemail. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+### 第二步:设置收件人
 
+允许群发邮件, 设置收件人代码如下:
+```ruby
+  mailer.to = "someone@**.com" # 单收件人
+  mailer.to = ["someone@**.com", "**"] # 多收件人
+```
+
+### 第三步:发送邮件
+
+邮件内容支持文本和html格式,两者都以字符串的形式作为参数,调用代码如下:
+```ruby
+# subject是邮件主题, content是邮件内容
+  mailer.email(subject, content)
+```
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
