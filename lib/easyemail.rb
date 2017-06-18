@@ -6,6 +6,20 @@ ActionMailer::Base.raise_delivery_errors = true
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.view_paths = File.dirname(__FILE__)
 
+smtp = {
+  "user_name" => "tuitusss@hhu.edu.cn",
+  "user_password" => "123456789shark",
+  "smtp" => "mail.hhu.edu.cn"
+}
+ActionMailer::Base.smtp_settings = {
+  address: smtp['smtp'],
+  port: 25,
+  authentication: :login,
+  user_name: smtp['user_name'],
+  password: smtp['user_password'],
+  enable_starttls_auto: false
+}
+
 class MyMailer < ActionMailer::Base
   def send_email from, to, subject, title, content
     p "dsfsdfssaaaaaaaaaaaaaaaa"
