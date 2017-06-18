@@ -10,6 +10,7 @@ class Easyemail
 
   class Mailer < ActionMailer::Base
     def send_email from, to, subject, title, content
+      p "dsfsdfssaaaaaaaaaaaaaaaa"
       @content = content
       @title = title
       mail(
