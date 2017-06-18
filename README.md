@@ -4,9 +4,7 @@ Easyemail是一个为简化邮件发送流程而发布的gem.
 
 ## Installation
 
-下载位于项目根目录下的gem安装包`easyemail-0.1.0.gem`
-
-执行命令`gem install easyemail-0.1.0.gem`
+`gem install easyemail`
 
 ## Usage
 
