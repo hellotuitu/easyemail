@@ -27,7 +27,7 @@ class Easyemail
     ActionMailer::Base.smtp_settings = {
       address: smtp['smtp'],
       port: smtp["port"],
-      authentication: :login,
+      authentication: smtp["authentication"],
       user_name: smtp['user_name'],
       password: smtp['user_password'],
       enable_starttls_auto: smtp["ttl"]
