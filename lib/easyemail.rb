@@ -4,6 +4,10 @@ class Easyemail
   require 'active_support'
   require 'action_mailer'
 
+  ActionMailer::Base.raise_delivery_errors = true
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.view_paths = File.dirname(__FILE__)
+  
   class Mailer < ActionMailer::Base
     def send_email from, to, subject, title, content
       @content = content
@@ -17,11 +21,9 @@ class Easyemail
       end
     end
   end
-  
+
   def initialize
-    ActionMailer::Base.raise_delivery_errors = true
-    ActionMailer::Base.delivery_method = :smtp
-    ActionMailer::Base.view_paths = File.dirname(__FILE__)
+
   end
 
   def smtp_settings smtp
