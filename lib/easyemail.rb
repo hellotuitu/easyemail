@@ -3,7 +3,8 @@ require "easyemail/version"
 class Easyemail
   require 'active_support'
   require 'action_mailer'
-
+  require "yaml"
+  
   ActionMailer::Base.raise_delivery_errors = true
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.delivery_method = :smtp
@@ -23,31 +24,50 @@ class Easyemail
     end
   end
 
-  def smtp_settings smtp
-    ActionMailer::Base.smtp_settings = {
-      address: smtp['smtp'],
-      port: smtp["port"],
-      authentication: smtp["authentication"],
-      user_name: smtp['user_name'],
-      password: smtp['user_password'],
-      enable_starttls_auto: smtp["ttl"]
-    }
-    @config = true
+  def load_smtp_settings_from_yaml path
+    smtp = YAML.load_file(path)
+    if smtp["provider"]
+      # 如果指定了是谁家的邮箱 待选列表 163, hhu, qq, gmail
+      self.send("smtp_settings_for_#{smtp["provider"]}", smtp)
+    else
+      self.smtp_settings smtp
+    end
   end
-
-  def from= from
-    @from = from
+  def smtp_settings smtp
+    # common settings for smtp, all provided by user.
+    begin
+      ActionMailer::Base.smtp_settings = {
+        address: smtp['smtp'],
+        port: smtp["port"],
+        authentication: smtp["authentication"],
+        user_name: smtp['user_name'],
+        password: smtp['user_password'],
+        enable_starttls_auto: smtp["ttl"]
+      }
+      @config = true
+    rescue
+      raise "wrong parameters for smtp settings."
+    end
   end
 
   def to= to
+    # 支持群发
     @to = to
   end
 
   def email subject, title, content
-    if @config && @from && @to
-      Mailer.send_email(@from, @to, subject, title, content).deliver
+    # content支持html
+
+    if @config && @to
+      if @to.respond_to? :each
+        @to.each do | e |
+          Mailer.send_email(ActionMailer::Base.smtp_settings["user_name"], e, subject, title, content).deliver
+        end
+      else
+        Mailer.send_email(ActionMailer::Base.smtp_settings["user_name"], @to, subject, title, content).deliver
+      end
     else
-      raise "check smtp_settings, from, to!"
+      raise "check smtp_settings and receiver!"
     end
   end
 
