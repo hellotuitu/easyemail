@@ -11,9 +11,8 @@ class Easyemail
   ActionMailer::Base.view_paths = File.dirname(__FILE__)
 
   class Mailer < ActionMailer::Base
-    def send_email from, to, subject, title, content
+    def send_email from, to, subject, content
       @content = content
-      @title = title
       mail(
         to: to,
         from: from,
@@ -27,7 +26,8 @@ class Easyemail
   def load_smtp_settings_from_yaml path
     smtp = YAML.load_file(path)
     if smtp["provider"]
-      # 如果指定了是谁家的邮箱 待选列表 163, hhu, qq, gmail
+      # 如果指定了邮件服务商 就直接跳转到该服务商
+      # 待选列表 163, hhu, qq, gmail
       self.send("smtp_settings_for_#{smtp["provider"]}", smtp)
     else
       self.smtp_settings smtp
@@ -57,16 +57,16 @@ class Easyemail
     @to = to
   end
 
-  def email subject, title, content
+  def email subject, content
     # content支持html
 
     if @config && @to
       if @to.respond_to? :each
         @to.each do | e |
-          Mailer.send_email(@from, e, subject, title, content).deliver
+          Mailer.send_email(@from, e, subject, content).deliver
         end
       else
-        Mailer.send_email(@from, @to, subject, title, content).deliver
+        Mailer.send_email(@from, @to, subject, content).deliver
       end
     else
       raise "check smtp_settings and receiver!"
