@@ -28,7 +28,7 @@ class Easyemail
     if smtp["provider"]
       # 如果指定了邮件服务商 就直接跳转到该服务商
       # 待选列表 163, hhu, qq, gmail
-      self.send("smtp_settings_for_#{smtp["provider"]}", smtp)
+      self.send("smtp_settings_for_#{smtp["provider"]}", smtp["user_name"], smtp["password"])
     else
       self.smtp_settings smtp
     end
