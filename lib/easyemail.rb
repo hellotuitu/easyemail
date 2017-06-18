@@ -12,7 +12,7 @@ class Easyemail
 
   def smtp_settings smtp
     ActionMailer::Base.smtp_settings = {
-      address: configuration['smtp'],
+      address: smtp['smtp'],
       port: 25,
       authentication: :login,
       user_name: smtp['user_name'],
@@ -29,11 +29,10 @@ class Easyemail
     @to = to
   end
 
-  def subject= subject
+  def email subject, title, content
     @subject = subject
-  end
-
-  def email
+    @title = title
+    @content = content
     class Mailer < ActionMailer::Base
       def send_email from, to, subject, title, content
         @content = content
