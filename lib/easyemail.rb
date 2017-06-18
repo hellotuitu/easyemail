@@ -6,7 +6,7 @@ ActionMailer::Base.raise_delivery_errors = true
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.view_paths = File.dirname(__FILE__)
 
-class Mailer < ActionMailer::Base
+class MyMailer < ActionMailer::Base
   def send_email from, to, subject, title, content
     p "dsfsdfssaaaaaaaaaaaaaaaa"
     @content = content
