@@ -26,11 +26,11 @@ class Easyemail
   def smtp_settings smtp
     ActionMailer::Base.smtp_settings = {
       address: smtp['smtp'],
-      port: 25,
+      port: smtp["port"],
       authentication: :login,
       user_name: smtp['user_name'],
       password: smtp['user_password'],
-      enable_starttls_auto: false
+      enable_starttls_auto: smtp["ttl"]
     }
   end
 
