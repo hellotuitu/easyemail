@@ -36,7 +36,6 @@ class Easyemail
 
   def smtp_settings smtp
     # common settings for smtp, all provided by user.
-    p smtp
     begin
       ActionMailer::Base.smtp_settings = {
         address: smtp['address'],
