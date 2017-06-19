@@ -1,29 +1,34 @@
 # Easyemail
 
-Easyemail是一个为简化邮件发送流程而发布的gem.
+Easyemail可以极大的简化发送邮件的过程.
 
 ## Installation
 
-`gem install easyemail`
+`gem install easyemail -v 1.0.0`
 
 ## Usage
 
 ### 第一步:设置smtp
 
-该gem为三个知名的邮件服务商`163.com qq.com gmail.com`和我学校(HHU)的邮箱服务做了预先的设置,如果你用来发送邮件的账号来自于以上的邮件服务商,设置smtp的方法如下:
+该gem内部为一些知名的邮件服务商提供了预设置, 查看支持的邮件服务商的代码如下:
 ```ruby
-# 以163邮箱为例
-# 确保该账号开通了smtp服务
-# username 和 password 是你的邮箱账号(账号包括完整后缀)和密码
   mailer = Easyemail.new
-  mailer.smtp_settings_for_163  user_name, password
-# 同样的方法还有:
-#   smtp_settings_for_hhu
-#   smtp_settings_for_qq
-#   smtp_settings_for_gmail
+  mailer.support
+  # 该方法返回一个支持的邮件服务商组成的数组
+  #ｅ.g: ["163", "qq", "hhu", "gmail"]
 ```
 
-如果你使用的不是以上任何一种,设置方法如下:
+对于任何一个支持的邮件服务商，可以使用便捷的smtp设置方法：
+```ruby
+  mailer.smtp_settings_for_*** user_name, password
+  # e.g:
+  #   smtp_settings_for_163
+  #   smtp_settings_for_qq
+  # 确保使用的账号开通了smtp服务
+  # username 和 password 是该邮箱账号(账号包括完整后缀)和密码(smtp服务密码)
+```
+
+如果你使用的邮箱账号不在支持列表中,设置方法如下:
 ```ruby
 # 确保该账号开通了smtp服务
 # username 和 password 是你的邮箱账号(账号包括完整后缀)和密码
@@ -39,9 +44,9 @@ Easyemail是一个为简化邮件发送流程而发布的gem.
   mailer.smtp_settings smtp
 ```
 
-另外,还可以从yaml配置文件中导入smtp信息,同样的,如果来自以上四个邮件服务商,配置文件可以这样写
+另外,还可以从yaml配置文件中导入smtp信息,同样的,如果邮件服务商被支持,配置文件可以这样写
 ```
-provider: ** # (只能从163, qq, gmail, hhu中任选一个)
+provider: ** # (只能从support方法返回的数组中选择)
 user_name: **
 password: **
 ```
