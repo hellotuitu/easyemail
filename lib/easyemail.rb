@@ -1,25 +1,24 @@
 require "easyemail/version"
+require "mailer"
 
 class Easyemail
-  require 'active_support'
-  require 'action_mailer'
   require "yaml"
 
-  ActionMailer::Base.raise_delivery_errors = true
-  ActionMailer::Base.perform_deliveries = true
-  ActionMailer::Base.delivery_method = :smtp
-  ActionMailer::Base.view_paths = File.dirname(__FILE__)
+  attr_accessor :to
 
-  class Mailer < ActionMailer::Base
-    def send_email from, to, subject, content
-      @content = content
-      mail(
-        to: to,
-        from: from,
-        subject: subject
-      ) do | format |
-        format.html
-      end
+  @@config = YAML.load_file(File.dirname(__FILE__) + "/easyemail/smtp.yml")
+
+  @@config.each do | key, value|
+    define_method "smtp_settings_for_#{key}" do | p1, p2|
+      smtp = {
+        "address" => value["address"],
+        "port" => value["port"],
+        "authentication" => value["authentication"],
+        "user_name" => p1,
+        "password" => p2,
+        "enable_starttls_auto" => value["enable_starttls_auto"]
+      }
+      self.smtp_settings smtp
     end
   end
 
@@ -52,14 +51,8 @@ class Easyemail
     end
   end
 
-  def to= to
-    # 支持群发
-    @to = to
-  end
-
   def email subject, content
     # content支持html
-
     if @config && @to
       if @to.respond_to? :each
         @to.each do | e |
@@ -73,51 +66,11 @@ class Easyemail
     end
   end
 
-  def smtp_settings_for_163 user_name, password
-    smtp = {
-      "address" => "smtp.163.com",
-      "port" => 25,
-      "authentication" => "login",
-      "user_name" => user_name,
-      "password" => password,
-      "enable_starttls_auto" => true
-    }
-    self.smtp_settings smtp
-  end
-
-  def smtp_settings_for_hhu user_name, password
-    smtp = {
-      "address" => "mail.hhu.edu.cn",
-      "port" => 25,
-      "authentication" => "login",
-      "user_name" => user_name,
-      "password" => password,
-      "enable_starttls_auto" => false
-    }
-    self.smtp_settings smtp
-  end
-
-  def smtp_settings_for_qq user_name, password
-    smtp = {
-      "address" => "smtp.qq.com",
-      "port" => 25,
-      "authentication" => "login",
-      "user_name" => user_name,
-      "password" => password,
-      "enable_starttls_auto" => false
-    }
-    self.smtp_settings smtp
-  end
-
-  def smtp_settings_for_gmail user_name, password
-    smtp = {
-      "address" => "smtp.gmail.com",
-      "port" => 587,
-      "authentication" => "login",
-      "user_name" => user_name,
-      "password" => password,
-      "enable_starttls_auto" => true
-    }
-    self.smtp_settings smtp
+  def support
+    ret = []
+    @@config.each do | key, value |
+      ret.push key
+    end
+    ret
   end
 end

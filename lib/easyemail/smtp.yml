@@ -1,0 +1,21 @@
+---
+"163":
+  address: "smtp.163.com"
+  port: 25
+  authentication: "login"
+  enable_starttls_auto: true
+"qq":
+  address: "smtp.qq.com"
+  port: 25
+  authentication: "login"
+  enable_starttls_auto: false
+"hhu":
+  address: "mail.hhu.edu.cn"
+  port: 25
+  authentication: "login"
+  enable_starttls_auto: false
+"gmail":
+  address: "smtp.gmail.com"
+  port: 587
+  authentication: "login"
+  enable_starttls_auto: true
