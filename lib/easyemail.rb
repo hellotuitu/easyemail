@@ -1,5 +1,5 @@
-require "./easyemail/version.rb"
-require "./mailer.rb"
+require "easyemail/version"
+require "mailer"
 
 class Easyemail
   require "yaml"
@@ -9,6 +9,7 @@ class Easyemail
   @@config = YAML.load_file(File.dirname(__FILE__) + "/easyemail/smtp.yml")
   @@support = []
   @@config.each do | key, value|
+    # generate methods
     @@support.push key
     define_method "smtp_settings_for_#{key}" do | p1, p2|
       value["user_name"] = p1
