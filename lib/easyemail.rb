@@ -1,5 +1,5 @@
-require "easyemail/version"
-require "mailer"
+require "./easyemail/version.rb"
+require "./mailer.rb"
 
 class Easyemail
   require "yaml"
@@ -11,10 +11,9 @@ class Easyemail
   @@config.each do | key, value|
     @@support.push key
     define_method "smtp_settings_for_#{key}" do | p1, p2|
-      smtp = value
-      smtp["user_name"] = p1
-      smtp["password"] = p2
-      self.smtp_settings smtp
+      value["user_name"] = p1
+      value["password"] = p2
+      self.smtp_settings value
     end
   end
 
@@ -31,7 +30,7 @@ class Easyemail
   def smtp_settings smtp
     # common settings for smtp, all provided by user.
     begin
-      ActionMailer::Base.smtp_settings = Hash[smtp.keys.each{ | e | e.to_sym }.zip smtp.values]
+      ActionMailer::Base.smtp_settings = Hash[smtp.keys.collect!{ | e | e.to_sym }.zip smtp.values]
       @from = smtp["user_name"]
       @config = true
     rescue
