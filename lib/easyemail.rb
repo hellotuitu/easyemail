@@ -7,17 +7,13 @@ class Easyemail
   attr_accessor :to
 
   @@config = YAML.load_file(File.dirname(__FILE__) + "/easyemail/smtp.yml")
-
+  @@support = []
   @@config.each do | key, value|
+    @@support.push key
     define_method "smtp_settings_for_#{key}" do | p1, p2|
-      smtp = {
-        "address" => value["address"],
-        "port" => value["port"],
-        "authentication" => value["authentication"],
-        "user_name" => p1,
-        "password" => p2,
-        "enable_starttls_auto" => value["enable_starttls_auto"]
-      }
+      smtp = value
+      smtp["user_name"] = p1
+      smtp["password"] = p2
       self.smtp_settings smtp
     end
   end
@@ -26,7 +22,6 @@ class Easyemail
     smtp = YAML.load_file(path)
     if smtp["provider"]
       # 如果指定了邮件服务商 就直接跳转到该服务商
-      # 待选列表 163, hhu, qq, gmail
       self.send("smtp_settings_for_#{smtp["provider"]}", smtp["user_name"], smtp["password"])
     else
       self.smtp_settings smtp
@@ -36,14 +31,7 @@ class Easyemail
   def smtp_settings smtp
     # common settings for smtp, all provided by user.
     begin
-      ActionMailer::Base.smtp_settings = {
-        address: smtp['address'],
-        port: smtp["port"],
-        authentication: smtp["authentication"],
-        user_name: smtp['user_name'],
-        password: smtp['password'],
-        enable_starttls_auto: smtp["enable_starttls_auto"]
-      }
+      ActionMailer::Base.smtp_settings = Hash[smtp.keys.each{ | e | e.to_sym }.zip smtp.values]
       @from = smtp["user_name"]
       @config = true
     rescue
@@ -67,10 +55,6 @@ class Easyemail
   end
 
   def support
-    ret = []
-    @@config.each do | key, value |
-      ret.push key
-    end
-    ret
+    @@support
   end
 end
